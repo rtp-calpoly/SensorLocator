@@ -21,6 +21,6 @@
  */
 
 /**
- * Package with classes for handling sensor location data.
+ * Package with classes for handling CVS files.
  */
-package org.humsat.demo.gssw.sensorlocator.data;
+package org.humsat.demo.gssw.sensorlocator.csv;

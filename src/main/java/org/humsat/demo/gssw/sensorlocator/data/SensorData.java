@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.humsat.demo.gssw.sensorlocator.SensorLocator;
+import org.humsat.demo.gssw.sensorlocator.csv.CSVHelper;
 
 /**
  * Class for handing sensor related data.
@@ -38,6 +39,8 @@ import org.humsat.demo.gssw.sensorlocator.SensorLocator;
  */
 public class SensorData
 {
+    /** Separator for the data of the hex string. */
+    public static final String HEX_SEPARATOR = ":";
     
     /** Timestamp associated with this sensor. */
     protected int timestamp = -1;
@@ -90,7 +93,7 @@ public class SensorData
         int __dataLen = Integer.parseInt(dataLen);
         
         String filtered_raw_data = rawData
-                .replaceAll(SensorLocator.HEX_SEPARATOR, "")
+                .replaceAll(HEX_SEPARATOR, "")
                 .replaceAll("\"", "");
         
         Logger.getLogger(SensorLocator.class.getName())
@@ -153,9 +156,9 @@ public class SensorData
     public String toString()
     {
         String buffer = "";
-        buffer = this.timestamp + SensorLocator.CSV_FIELD_SEPARATOR
-                    + this.sensorId + SensorLocator.CSV_FIELD_SEPARATOR
-                    + this.dataLen + SensorLocator.CSV_FIELD_SEPARATOR
+        buffer = this.timestamp + CSVHelper.CSV_FIELD_SEPARATOR
+                    + this.sensorId + CSVHelper.CSV_FIELD_SEPARATOR
+                    + this.dataLen + CSVHelper.CSV_FIELD_SEPARATOR
                     + this.data;
         return(buffer);
     }

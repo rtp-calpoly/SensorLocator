@@ -25,14 +25,12 @@ import cx.ath.rtubio.javalib.pojos.FileHelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.File;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.humsat.demo.gssw.sensorlocator.csv.CSVHelper;
 import org.humsat.demo.gssw.sensorlocator.kml.KMLNode;
 import org.humsat.demo.gssw.sensorlocator.data.SensorData;
 import org.humsat.demo.gssw.sensorlocator.kml.SimpleKMLWriter;
@@ -44,10 +42,6 @@ import org.humsat.demo.gssw.sensorlocator.kml.SimpleKMLWriter;
  */
 public class SensorLocator 
 {
-    /** Separator for the data of the hex string. */
-    public static final String HEX_SEPARATOR = ":";
-    /** Initial and final character of the data field. */
-    public static final String DATA_FIELD_SEPARATOR = "\"";
     
     /** Input CSV file. */
     protected File inputFile = null;
@@ -68,210 +62,11 @@ public class SensorLocator
         this.outputFile = outputFile;
         
         this.intFile
-            = FileHelper.makeOutputFile(getCSVIntermediateFilename
+            = FileHelper.makeOutputFile(CSVHelper.getCSVIntermediateFilename
                                             (inputFile.getName()), true);
         
     }
 
-    /** Separator of the fields of the CSV file. */
-    public final static String CSV_FIELD_SEPARATOR = ",";
-    /** String for filtering each line of the CSV input file. */
-    public final static String LINE_FILTER = "Event-A";
-    /** Fields to be selected. */
-    public int[] FIELDS = {38, 43, 44, 45};
-    /** Number of fields required for each line of the CSV input file. */
-    public final static int FIELDS_REQUIRED = 46;
-    
-    /**
-     * Method that returns the name of the intermediate CSV file generated from
-     * the original name of the input file.
-     * 
-     * @param csvFilename The name of the original CSV input file.
-     * @return  The just-generated name.
-     */
-    protected static String getCSVIntermediateFilename(String csvFilename)
-        { return(csvFilename + ".int"); }
-    
-    /**
-     * This method filters the input file as configured for this object and
-     * writes the results in the given file as CSV text.
-     * 
-     * @return List with the SensorData objects that contain the information
-     *          related with the sensors.
-     * @throws IOException In case any problem occurs while reading, filtering
-     *                      or writing.
-     */
-    @Deprecated
-    protected List<SensorData> filterSensorData()
-        throws IOException
-    {
-        
-        List<SensorData> s_data = this.readSensorData();
-        Logger.getLogger(SensorLocator.class.getName())
-                .log(Level.INFO, "Step 1/3: filterCSVLines() = {0}", s_data);
-        
-        List<String> lines = getLines(s_data);
-        Logger.getLogger(SensorLocator.class.getName())
-                .log(Level.INFO, "Step 2/3: getLines() = {0}", lines);
-        
-        SensorLocator.writeTextFile(this.intFile, lines);
-        Logger.getLogger(SensorLocator.class.getName())
-                .log(Level.INFO, "Step 3/3: intermediate file written, f = {0}"
-                                    , this.intFile.getAbsolutePath());
-     
-        return(s_data);
-        
-    }
-    
-    /**
-     * Transforms a list of SensorData objects into a list of lines, each line
-     * containing the data of the SensorData objects.
-     * 
-     * @param list Input list to be transformed.
-     * @return List with the text lines.
-     */
-    protected static List<String> getLines(final List<SensorData> list)
-    {
-    
-        List<String> lines = new ArrayList<String>();
-        for ( SensorData sd_i : list )
-            { lines.add(sd_i.toString()); }
-        return(lines);
-        
-    }
-    
-    /**
-     * Method that applies a series of filters to the input CSV file in order
-     * to get a more simple CSV input file. It erases all columns that are not
-     * to be used through subsequent processing stages.
-     * 
-     * @return List of the lines selected without the columns.
-     */
-    protected List<SensorData> readSensorData()
-        throws FileNotFoundException, IOException
-    {
-    
-        BufferedReader in = new BufferedReader(new FileReader(this.inputFile));
-        String line;
-        List<SensorData> lines = new ArrayList<SensorData>();
-        
-        while ( ( line = in.readLine() ) != null )
-        {
-            
-            if ( line.contains(LINE_FILTER) == false )
-            {
-                Logger.getLogger(SensorLocator.class.getName())
-                        .log(   Level.FINE,
-                                "No {0} data, skipping line = {1}"
-                                    , new Object[]{LINE_FILTER, line}   );
-                continue;
-            }
-            
-            String[] fields = line.split(CSV_FIELD_SEPARATOR);
-            
-            if ( ( fields == null ) || ( fields.length == 0 ) )
-            {
-                Logger.getLogger(SensorLocator.class.getName())
-                        .log(Level.FINE, "Empty line! Skipping...");
-                continue;
-            }
-            
-            if ( fields.length < FIELDS_REQUIRED )
-            {
-                Logger.getLogger(SensorLocator.class.getName())
-                        .log(   Level.FINE,
-                                "Wrong line, fields = {0} < required = {1}. "
-                                    + "Skipping..."
-                                    , new Object[]
-                                        {fields.length, FIELDS_REQUIRED}    );
-                continue;
-            }
-            
-            Logger.getLogger(SensorLocator.class.getName())
-                    .log(   Level.FINE,
-                            "fields#{0} >>> (selected) :: {1}/{2}/{3}/{4}\n"
-                                ,  new Object[]
-                                    {  
-                                        fields.length, fields[38], fields[43],
-                                        fields[44], fields[45]
-                                    }) ;
-            
-            List<String> line_i = selectFields(fields, FIELDS);
-            
-            try
-            {
-                Logger.getLogger(SensorLocator.class.getName())
-                        .log(Level.INFO, "Parsing line = {0}", line_i);
-                SensorData sdi = new SensorData
-                                        (   line_i.get(0), line_i.get(1), 
-                                            line_i.get(2), line_i.get(3)    );
-                lines.add(sdi);   
-            }
-            catch(IllegalArgumentException ex)
-            {
-                Logger.getLogger(SensorLocator.class.getName())
-                        .log(Level.WARNING, "Wrong format, "
-                            + "skipping line = {0}", line_i);
-                Logger.getLogger(SensorLocator.class.getName())
-                        .log(Level.WARNING, ex.getMessage(), ex);
-                continue;
-            }
-            
-        }
-        
-        in.close();
-        return(lines);
-        
-    }
-    
-    /**
-     * Gets the line formatted for a CSV file using the set of elements from 
-     * among the "fields" array indicated by the elements of the selection
-     * array.
-     * 
-     * @param fields All the fields from which to make the selection.
-     * @param separator CSV fields separator.
-     * @param selection List of fields to be selected.
-     * @return Line as per a CSV file.
-     */
-    protected static String getLine
-        (String[] fields, String separator, int[] selection)
-    {
-    
-        String buffer = "";
-        int s = selection.length;
-        
-        for ( int i = 0; i < s; i++ )
-        {
-            buffer += fields[selection[i]];
-            if ( i < ( s - 1 ) ) { buffer += separator; }
-        }
-        
-        return(buffer);
-        
-    }
-    
-    /**
-     * Static method that returns a set of elements of the input list, using 
-     * the indexes contained in the given selection array.
-     * 
-     * @param fields Input list with all available fields.
-     * @param selection Set of fields to be selected.
-     * @return List containing the selected fields.
-     */
-    protected static List<String> selectFields
-        (final String[] fields, final int[] selection)
-    {
-    
-        List<String> buffer = new ArrayList<String>();
-        
-        for ( int i = 0; i < selection.length; i++ )
-            { buffer.add(fields[selection[i]]); }
-        
-        return(buffer);
-        
-    }
-    
     /**
      * Static method that transforms a list of SensorData objects into a list
      * of KML nodes.
@@ -303,6 +98,23 @@ public class SensorLocator
         }
         
         return(l);
+        
+    }
+    
+    /**
+     * Transforms a list of SensorData objects into a list of lines, each line
+     * containing the data of the SensorData objects.
+     * 
+     * @param list Input list to be transformed.
+     * @return List with the text lines.
+     */
+    protected static List<String> getLines(final List<SensorData> list)
+    {
+    
+        List<String> lines = new ArrayList<String>();
+        for ( SensorData sd_i : list )
+            { lines.add(sd_i.toString()); }
+        return(lines);
         
     }
     
@@ -340,6 +152,37 @@ public class SensorLocator
     
     }
     
+    /**
+     * This method filters the input file as configured for this object and
+     * writes the results in the given file as CSV text.
+     * 
+     * @return List with the SensorData objects that contain the information
+     *          related with the sensors.
+     * @throws IOException In case any problem occurs while reading, filtering
+     *                      or writing.
+     */
+    @Deprecated
+    protected List<SensorData> filterSensorData()
+        throws IOException
+    {
+        
+        List<SensorData> s_data = CSVHelper.readSensorData(this.inputFile);
+        Logger.getLogger(SensorLocator.class.getName())
+                .log(Level.INFO, "Step 1/3: filterCSVLines() = {0}", s_data);
+        
+        List<String> lines = getLines(s_data);
+        Logger.getLogger(SensorLocator.class.getName())
+                .log(Level.INFO, "Step 2/3: getLines() = {0}", lines);
+        
+        SensorLocator.writeTextFile(this.intFile, lines);
+        Logger.getLogger(SensorLocator.class.getName())
+                .log(Level.INFO, "Step 3/3: intermediate file written, f = {0}"
+                                    , this.intFile.getAbsolutePath());
+     
+        return(s_data);
+        
+    }
+    
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> main ()
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -361,7 +204,7 @@ public class SensorLocator
             
             Logger.getLogger(SensorLocator.class.getName())
                                 .log(Level.INFO, "Reading sensor data...");
-            List<SensorData> sensors = sl.readSensorData();
+            List<SensorData> sensors = CSVHelper.readSensorData(sl.inputFile);
             List<KMLNode> k_nodes = SensorLocator.createKMLNodes(sensors);
             
             Logger.getLogger(SensorLocator.class.getName())
