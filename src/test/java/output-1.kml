@@ -17,7 +17,7 @@
 &lt;li&gt;River PH = 6.8 (u.pH)&lt;/li&gt;</description>
       <styleUrl>#redIcon</styleUrl>
       <Point>
-        <coordinates>42.92,-5.23</coordinates>
+        <coordinates>-5.23,42.92</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -27,7 +27,7 @@
 &lt;li&gt;Rain = 3.0 (l/m^2)&lt;/li&gt;</description>
       <styleUrl>#redIcon</styleUrl>
       <Point>
-        <coordinates>90.0,0.0</coordinates>
+        <coordinates>0.0,90.0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -37,7 +37,7 @@
 &lt;li&gt;Wind = 4.0 (m/s), 0.0 (degrees)&lt;/li&gt;</description>
       <styleUrl>#redIcon</styleUrl>
       <Point>
-        <coordinates>-25.45,-14.25</coordinates>
+        <coordinates>-14.25,-25.45</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -46,7 +46,7 @@
 &lt;li&gt;Sea salinity = 36.59 (psu)&lt;/li&gt;</description>
       <styleUrl>#redIcon</styleUrl>
       <Point>
-        <coordinates>58.45,24.65</coordinates>
+        <coordinates>24.65,58.45</coordinates>
       </Point>
     </Placemark>
   </Document>

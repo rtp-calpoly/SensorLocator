@@ -28,7 +28,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -44,15 +46,30 @@ import org.humsat.demo.gssw.sensorlocator.data.SensorData;
 public class CSVHelper
 {
     
+    /** HUMPL Time column name. */
+    public final static String HUMPL_TIME_CN = "HUMPL Time";
+    /** Sensor ID column name. */
+    public final static String SENSOR_ID_CN = "Sensor ID";
+    /** Sensor Length column name. */
+    public final static String SENSOR_LENGTH_CN = "Length";
+    /** Sensor Data column name. */
+    public final static String SENSOR_DATA_CN = "Data";
 
+    /** All fields containing sensor information. */
+    public final static List<String> SENSOR_CN = new ArrayList<String>()
+    {
+        {
+            this.add(HUMPL_TIME_CN);
+            this.add(SENSOR_ID_CN);
+            this.add(SENSOR_LENGTH_CN);
+            this.add(SENSOR_DATA_CN);  
+        }
+    };
+    
     /** Separator of the fields of the CSV file. */
     public final static String CSV_FIELD_SEPARATOR = ",";
     /** String for filtering each line of the CSV input file. */
     public final static String LINE_FILTER = "Event-A";
-    /** Fields to be selected. */
-    public final static int[] FIELDS = {38, 43, 44, 45};
-    /** Number of fields required for each line of the CSV input file. */
-    public final static int FIELDS_REQUIRED = 46;
     
     /**
      * Method that applies a series of filters to the input CSV file in order
@@ -61,16 +78,24 @@ public class CSVHelper
      * 
      * @return List of the lines selected without the columns.
      */
-    public static List<SensorData> readSensorData(File inputFile)
+    public static List<SensorData> readSensorData(final File inputFile)
         throws FileNotFoundException, IOException
     {
         
         BufferedReader in = new BufferedReader(new FileReader(inputFile));
-        String line;
+        String line = "";
         List<SensorData> lines = new ArrayList<SensorData>();
+        Map<String, Integer> indexes = readSensorDataIndexes(inputFile);
+        int fields_required = getFieldsRequired(indexes);
+        
+        System.out.println("req = " + fields_required 
+                            + ", indexes = " + indexes);
         
         while ( ( line = in.readLine() ) != null )
         {
+            
+            line = line.replaceAll("[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{2}", "");
+            //line = line.replaceAll("\"[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{2}\"", "");
             
             if ( line.contains(LINE_FILTER) == false )
             {
@@ -90,32 +115,28 @@ public class CSVHelper
                 continue;
             }
             
-            if ( fields.length < FIELDS_REQUIRED )
+            if ( fields.length < fields_required )
             {
                 Logger.getLogger(SensorLocator.class.getName())
                         .log(   Level.FINE,
                                 "Wrong line, fields = {0} < required = {1}. "
-                                    + "Skipping..."
+                                    + "Skipping, line = {2}"
                                     , new Object[]
-                                        {fields.length, FIELDS_REQUIRED}    );
+                                        {fields.length, fields_required, line});
                 continue;
             }
-            
+
+            List<String> line_i = selectFields(fields, indexes);
+
             Logger.getLogger(SensorLocator.class.getName())
-                    .log(   Level.FINE,
-                            "fields#{0} >>> (selected) :: {1}/{2}/{3}/{4}\n"
-                                ,  new Object[]
-                                    {  
-                                        fields.length, fields[38], fields[43],
-                                        fields[44], fields[45]
-                                    }) ;
-            
-            List<String> line_i = selectFields(fields, FIELDS);
+                    .log(   Level.INFO,
+                            "fields#{0} >>> (selected) = {1}\n"
+                                , new Object[]{fields.length, line_i}   );
             
             try
             {
                 Logger.getLogger(SensorLocator.class.getName())
-                        .log(Level.INFO, "Parsing line = {0}", line_i);
+                        .log(Level.FINE, "Parsing line = {0}", line_i);
                 SensorData sdi = new SensorData
                                         (   line_i.get(0), line_i.get(1), 
                                             line_i.get(2), line_i.get(3)    );
@@ -149,7 +170,7 @@ public class CSVHelper
      * @return Line as per a CSV file.
      */
     protected static String getLine
-        (String[] fields, String separator, int[] selection)
+        (final String[] fields, final String separator, final int[] selection)
     {
     
         String buffer = "";
@@ -166,6 +187,55 @@ public class CSVHelper
     }
     
     /**
+     * Gets the total ammount of fields required.
+     * 
+     * @param indexes Set of indexes to be read.
+     * @return Total ammount of fields that must be available.
+     */
+    public static int getFieldsRequired(final Map<String, Integer> indexes)
+    {
+    
+        int compare = 0;
+        Collection<Integer> vs = indexes.values();
+        Iterator<Integer> it = vs.iterator();
+        
+        while ( it.hasNext() == true )
+        {
+            Integer i = it.next();
+            if ( compare < i.intValue() )
+                { compare = i.intValue(); }
+        }
+        
+        return(compare + 1);
+        
+    }
+    
+    /**
+     * Static method that returns a set of elements of the input list, using 
+     * the indexes contained in the given selection array.
+     * 
+     * @param fields Input list with all available fields.
+     * @param selection Set of fields to be selected.
+     * @return List containing the selected fields.
+     */
+    protected static List<String> selectFields
+        (final String[] fields, final Map<String, Integer> selection)
+    {
+    
+        System.out.println("selectFields, m =\n" + selection);
+        
+        int[] s_a = new int[selection.size()];
+            
+        s_a[0] = selection.get(HUMPL_TIME_CN);
+        s_a[1] = selection.get(SENSOR_ID_CN);
+        s_a[2] = selection.get(SENSOR_LENGTH_CN);
+        s_a[3] = selection.get(SENSOR_DATA_CN);
+        
+        return(selectFields(fields, s_a));
+        
+    }
+    
+    /**
      * Static method that returns a set of elements of the input list, using 
      * the indexes contained in the given selection array.
      * 
@@ -177,10 +247,23 @@ public class CSVHelper
         (final String[] fields, final int[] selection)
     {
     
+        for ( int i = 0; i < selection.length; i++ )
+        {
+            System.out.println("selection[" + i + "] = " + selection[i]);
+        }
+        
+        System.out.println("### fields = " + Arrays.asList(fields));
+        
         List<String> buffer = new ArrayList<String>();
         
         for ( int i = 0; i < selection.length; i++ )
-            { buffer.add(fields[selection[i]]); }
+        {
+            int s_i = selection[i];
+            System.out.println("s[" + i + "] = " + s_i);
+            String f_i = fields[s_i];
+            System.out.println("f[" + i + "] = " + f_i);
+            buffer.add(f_i);
+        }
         
         return(buffer);
         
@@ -191,12 +274,19 @@ public class CSVHelper
      * 
      * @param line First line of the given CSV file.
      * @return List with the headers found.
+     * @throws FileNotFoundException In case the given file does not exist.
+     * @throws IOException In case any IO problem occurs.
      */
-    public static List<String> getHeaders(final String line)
+    public static List<String> readHeaders(final File input)
+            throws FileNotFoundException, IOException
     {
             
+        BufferedReader in = new BufferedReader(new FileReader(input));
+        String line = in.readLine();
+        in.close();
+        
         if ( ( line == null ) || ( line.length() == 0 ) )
-            { throw(new IllegalArgumentException("<line> is empty.")); }
+            { throw(new IllegalArgumentException("<input> FILE is empty.")); }
     
         String[] splits = line.split(CSV_FIELD_SEPARATOR);
         if ( ( splits == null ) || ( splits.length == 0 ) )
@@ -204,8 +294,65 @@ public class CSVHelper
             throw(new IllegalArgumentException("No headers found, line = " 
                                                 + line));
         }
-            
+        
         return(Arrays.asList(splits));
+        
+    }
+    
+    /**
+     * Static method that gets the indexes of the required columns.
+     * 
+     * @param input The input file from where to read the data.
+     * @return A map with each column name linked to its index.
+     * @throws FileNotFoundException In case the given file does not exist.
+     * @throws IOException In case any IO problem occurs.
+     */
+    public static Map<String, Integer> readSensorDataIndexes(final File input)
+        throws FileNotFoundException, IOException
+    {
+    
+        List<String> headers = readHeaders(input);
+        Map<String, Integer> indexes = getSensorDataIndexes(headers);
+        return(indexes);
+        
+    }
+    
+    /**
+     * Static method that extracts the indexes that contain the information of
+     * the sensors.
+     * 
+     * @param headers All CSV file headers.
+     * @return Indexes of all data required.
+     */
+    public static Map<String, Integer> getSensorDataIndexes
+            (final List<String> headers)
+    {
+        
+        if ( ( headers == null ) || ( headers.isEmpty() == true ) )
+            { throw(new IllegalArgumentException("<indexes> is empty.")); }
+        
+        Integer h_t_index = - 1;
+        Integer s_id_index = -1;
+        
+        h_t_index = headers.indexOf(HUMPL_TIME_CN);
+        s_id_index = headers.indexOf(SENSOR_ID_CN);
+        
+        if ( h_t_index == - 1)
+            { h_t_index = headers.indexOf("\"" + HUMPL_TIME_CN + "\""); }
+        if ( s_id_index == - 1)
+            { s_id_index = headers.indexOf("\"" + SENSOR_ID_CN + "\""); }
+        
+        Integer s_l_index = s_id_index + 1;
+        Integer s_d_index = s_id_index + 2;
+        
+        Map<String, Integer> indexes = new HashMap<String, Integer>();
+        
+        indexes.put(HUMPL_TIME_CN, h_t_index);
+        indexes.put(SENSOR_ID_CN, s_id_index);
+        indexes.put(SENSOR_LENGTH_CN, s_l_index);
+        indexes.put(SENSOR_DATA_CN, s_d_index);
+        
+        return(indexes);
         
     }
     

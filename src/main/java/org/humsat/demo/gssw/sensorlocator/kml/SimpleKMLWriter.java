@@ -95,7 +95,7 @@ public class SimpleKMLWriter
 	// Point
 	Element pmPoint = new Element("Point", ns);
 	placemark.addContent(pmPoint);
-						
+
 	// coordinates
 	Element pmCoordinates = new Element("coordinates", ns);
 	pmCoordinates.setText(node.position.getKMLPosition().trim());

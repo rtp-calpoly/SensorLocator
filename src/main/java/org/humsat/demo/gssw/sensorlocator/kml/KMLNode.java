@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.humsat.demo.gssw.sensorlocator.data.DataField;
 import org.humsat.demo.gssw.sensorlocator.data.DataFieldConstants;
-import static org.humsat.demo.gssw.sensorlocator.data.DataFieldConstants.POSITION_F_CODE;
 import org.humsat.demo.gssw.sensorlocator.data.SensorData;
 
 /**
@@ -81,14 +80,14 @@ public class KMLNode
          * @return The KML position in String format.
          */
         public String getKMLPosition()
-            { return("" + this.latitude + "," + this.longitude); }
+            { return("" + this.longitude + "," + this.latitude); }
         
         @Override
         public String toString()
         {
             String buffer = "";
-            buffer  += "(latitude,longitude) = "
-                    + "(" + this.latitude + "," + this.longitude + ")"
+            buffer  += "(longitude,latitude) = "
+                    + "(" + this.longitude + "," + this.latitude + ")"
                     + POSITION_UNITS;
             return(buffer);
         }

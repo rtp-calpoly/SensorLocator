@@ -21,12 +21,16 @@
  */
 package org.humsat.demo.gssw.sensorlocator;
 
+import cx.ath.rtubio.javalib.pojos.FileHelper;
 import org.junit.*;
 import java.util.logging.Logger;
 import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Level;
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.humsat.demo.gssw.sensorlocator.csv.CSVHelper;
 import org.humsat.demo.gssw.sensorlocator.data.DataField;
 import org.humsat.demo.gssw.sensorlocator.kml.KMLNode;
 import org.humsat.demo.gssw.sensorlocator.data.SensorData;
@@ -67,7 +71,10 @@ public class SensorLocatorTest
     /** Test file. */
     public final static String CSV_TEST_FILE_3 = TEST_FILES_PATH
                                                     + "input-3-real.csv";
-    
+    /** Test file. */
+    public final static String CSV_TEST_FILE_4 = TEST_FILES_PATH
+                                                    + "input-4-real.csv";
+
     /** CLI arguments for test 1. */
     public final static String[] ARGS_TEST_1 =
     {
@@ -100,6 +107,39 @@ public class SensorLocatorTest
         Float result = new Float(5.0);
         Float current = Float.parseFloat(float_test);        
         Assert.assertEquals(current, result, 0);
+        
+    }
+ 
+    /** CLI arguments for test 2. */
+    public final static String[] ARGS_TEST_2 =
+    {
+        CSV_TEST_FILE_4, TEST_FILES_PATH + "output-2.kml"
+    };
+    
+    /**
+     * Test of main method, of class SensorLocator.
+     */
+    @Test
+    public void test__agmuinoCSV()
+    {
+        
+        System.out.println(">>>>>>>>>> test__agmuinoCSV <<<<<<<<<");
+        SensorLocator.main(ARGS_TEST_2);
+        
+    }
+    
+    @Test
+    public void test__readSensorDataIndexes()
+            throws IOException
+    {
+        
+        System.out.println(">>>>>>>>>> test__agmuinoCSV <<<<<<<<<");
+        
+        File input = FileHelper.checkInputFile(CSV_TEST_FILE_4);
+        Map<String, Integer> indexes = CSVHelper.readSensorDataIndexes(input);
+        int req = CSVHelper.getFieldsRequired(indexes);
+        
+        System.out.println("*** req = " + req + ", indexes = \n" + indexes);
         
     }
     

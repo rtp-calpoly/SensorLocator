@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Java Generated KML Document</name>
+    <Style id="redIcon">
+      <IconStyle>
+        <color>990000ff</color>
+        <Icon>
+          <href>http://www.clker.com/cliparts/O/5/U/b/h/Q/radio-waves-3-hpg-hi.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <Placemark>
+      <name>SensorID = 560, timestamp = 469074176</name>
+      <description>&lt;li&gt;River volume = 3.5 (m^3/s)&lt;/li&gt;
+&lt;li&gt;River level = 233.46 (meters)&lt;/li&gt;
+&lt;li&gt;River Oxigen = 9.1 (mg/L)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>-71.22,-6.96</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>SensorID = 564, timestamp = 469073283</name>
+      <description>&lt;li&gt;Temperature = -5.0 (centigrades)&lt;/li&gt;
+&lt;li&gt;Relative Humidity = 92.0 (%)&lt;/li&gt;
+&lt;li&gt;Rain = 3.0 (l/m^2)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>-34.63,-77.87</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>SensorID = 561, timestamp = 469073046</name>
+      <description>&lt;li&gt;River volume = 2.1 (m^3/s)&lt;/li&gt;
+&lt;li&gt;River level = 57.4 (meters)&lt;/li&gt;
+&lt;li&gt;River PH = 7.1 (u.pH)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>-67.73,1.11</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>SensorID = 567, timestamp = 469073001</name>
+      <description>&lt;li&gt;Temperature = 40.0 (centigrades)&lt;/li&gt;
+&lt;li&gt;Wind = 0.0 (m/s), 180.0 (degrees)&lt;/li&gt;
+&lt;li&gt;Relative Humidity = 72.0 (%)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>-3.95,14.55</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>SensorID = 566, timestamp = 469072989</name>
+      <description>&lt;li&gt;Temperature = 30.0 (centigrades)&lt;/li&gt;
+&lt;li&gt;Wind = 0.0 (m/s), 270.0 (degrees)&lt;/li&gt;
+&lt;li&gt;Relative Humidity = 77.0 (%)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>9.35,14.41</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>SensorID = 563, timestamp = 469072965</name>
+      <description>&lt;li&gt;Swell = 1.76 (m), 42.0 (degrees)&lt;/li&gt;
+&lt;li&gt;Sea salinity = 36.81 (psu)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>-111.28,18.77</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>SensorID = 568, timestamp = 469072911</name>
+      <description>&lt;li&gt;Temperature = 37.0 (centigrades)&lt;/li&gt;
+&lt;li&gt;Wind = 5.0 (m/s), 90.0 (degrees)&lt;/li&gt;
+&lt;li&gt;Relative Humidity = 37.0 (%)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>-2.08,31.51</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>SensorID = 562, timestamp = 469072749</name>
+      <description>&lt;li&gt;Stream = 21.1 (cm/s), 137.0 (degrees)&lt;/li&gt;
+&lt;li&gt;Temperature = 21.4 (centigrades)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>-21.19,28.26</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>SensorID = 565, timestamp = 469072671</name>
+      <description>&lt;li&gt;Temperature = -57.0 (centigrades)&lt;/li&gt;
+&lt;li&gt;Wind = 4.0 (m/s), 100.0 (degrees)&lt;/li&gt;
+&lt;li&gt;Relative Humidity = 89.0 (%)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>0.0,-90.0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>
