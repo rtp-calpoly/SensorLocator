@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Java Generated KML Document</name>
+    <Style id="redIcon">
+      <IconStyle>
+        <color>990000ff</color>
+        <Icon>
+          <href>http://www.clker.com/cliparts/O/5/U/b/h/Q/radio-waves-3-hpg-hi.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <Placemark>
+      <name>SensorID = 8, timestamp = 3297</name>
+      <description>&lt;li&gt;River volume = 1.63 (m^3/s)&lt;/li&gt;
+&lt;li&gt;River level = 233.46 (meters)&lt;/li&gt;
+&lt;li&gt;River PH = 6.8 (u.pH)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>42.92,-5.23</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>SensorID = 8, timestamp = 3267</name>
+      <description>&lt;li&gt;Temperature = -5.0 (centigrades)&lt;/li&gt;
+&lt;li&gt;Wind = 13.9 (m/s), 45.0 (degrees)&lt;/li&gt;
+&lt;li&gt;Rain = 3.0 (l/m^2)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>90.0,0.0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>SensorID = 8, timestamp = 3220</name>
+      <description>&lt;li&gt;Temperature = 40.0 (centigrades)&lt;/li&gt;
+&lt;li&gt;Relative Humidity = 77.0 (%)&lt;/li&gt;
+&lt;li&gt;Wind = 4.0 (m/s), 0.0 (degrees)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>-25.45,-14.25</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>SensorID = 8, timestamp = 3193</name>
+      <description>&lt;li&gt;Stream = 21.1 (cm/s), 270.0 (degrees)&lt;/li&gt;
+&lt;li&gt;Sea salinity = 36.59 (psu)&lt;/li&gt;</description>
+      <styleUrl>#redIcon</styleUrl>
+      <Point>
+        <coordinates>58.45,24.65</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>
