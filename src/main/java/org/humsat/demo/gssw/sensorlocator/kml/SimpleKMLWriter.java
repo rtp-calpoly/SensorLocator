@@ -150,7 +150,7 @@ public class SimpleKMLWriter
 		
 	// name
 	Element name = new Element("name", ns);
-	name.setText("Java Generated KML Document");
+	name.setText("HumSAT-D sensors");
 	this.root.addContent(name);
 		
 	// Style

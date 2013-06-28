@@ -37,4 +37,27 @@
                 <exec.workingdir>/home/rtubio/dev/java/netbeans-workspace/SensorLocator/src/test/java</exec.workingdir>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-package</actionName>
+            <displayName>package</displayName>
+            <goals>
+                <goal>package</goal>
+            </goals>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </action>
+        <action>
+            <actionName>rebuild</actionName>
+            <preAction>build-with-dependencies</preAction>
+            <goals>
+                <goal>clean</goal>
+                <goal>install</goal>
+                <goal>package</goal>
+                <goal>dependency:copy-dependencies</goal>
+            </goals>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </action>
     </actions>
